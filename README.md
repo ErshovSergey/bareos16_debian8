@@ -16,18 +16,19 @@ docker build --rm=true --force-rm --tag=ershov/bareos16-debian8 .
 ```
 Создаем папку для хранения настроек, логов и отчетов вне контейнера
 ```shell
-export SHARE_DIR="/var/lib/mnt_point/4Tb/docker/bareos" && mkdir -p $SHARE_DIR
+export SHARE_DIR="/mnt/sdb/DOCKER_DATA/bareos16-debian8" && mkdir -p $SHARE_DIR
 ```
 Правим файлы настроек:
  - *$/SHARE_DIR/msmtprc* - настройки **msmtp** для отправки почты от bareos
- - *$SHARE_DIR//SHARE_DIR/web-admin.conf* - пароль от web-консоли
- - *$SHARE_DIR/credetinals/videoserverd.config* - камеры, логи
+ - *$SHARE_DIR/web-admin.conf* - пароль от web-консоли
+ - *$SHARE_DIR/etc-bareos/bareos-dir.d/* - настройки директора
+ - *$SHARE_DIR/etc-bareos/bareos-fd.d//* - настройки клиента
 
 ##Запускаем
 Определяем ip адрес на котором будет доступна web-управление и папку для хранения БД и конфигурационных файлов
 ```shell
 export ip_addr=192.168.100.240
-docker run -d --name bareos16-debian8 --restart=always \
+docker run -di --name bareos16-debian8 --restart=always \
 -p $ip_addr:33081:80 \
 -h bareos \
 -v $SHARE_DIR:/SHARE_DIR \
